@@ -46,7 +46,7 @@
 #include "openvino_wrapper_lib/models/emotion_detection_model.hpp"
 #include "openvino_wrapper_lib/inferences/head_pose_detection.hpp"
 #include "openvino_wrapper_lib/models/head_pose_detection_model.hpp"
-//#include "openvino_wrapper_lib/models/object_detection_yolov5_model.hpp"
+#include "openvino_wrapper_lib/models/object_detection_yolov5_model.hpp"
 #include "openvino_wrapper_lib/models/object_detection_yolov7_model.hpp"
 #include "openvino_wrapper_lib/models/object_detection_ssd_model.hpp"
 #include "openvino_wrapper_lib/inferences/object_segmentation.hpp"
@@ -293,10 +293,10 @@ PipelineManager::createObjectDetection(
     object_detection_model =
       std::make_shared<Models::ObjectDetectionSSDModel>(infer.label, infer.model, infer.batch);
   }
-  // if (infer.model_type == kInferTpye_ObjectDetectionTypeYolov5) {
-  //   object_detection_model =
-  //     std::make_shared<Models::ObjectDetectionYolov5Model>(infer.label, infer.model, infer.batch);
-  // }
+  if (infer.model_type == kInferTpye_ObjectDetectionTypeYolov5) {
+    object_detection_model =
+      std::make_shared<Models::ObjectDetectionYolov5Model>(infer.label, infer.model, infer.batch);
+  }
   if (infer.model_type == kInferTpye_ObjectDetectionTypeYolov7) {
     object_detection_model =
       std::make_shared<Models::ObjectDetectionYolov7Model>(infer.label, infer.model, infer.batch);
