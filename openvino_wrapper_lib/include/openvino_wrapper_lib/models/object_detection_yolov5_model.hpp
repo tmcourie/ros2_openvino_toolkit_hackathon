@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 /**
- * @brief A header file with declaration for ObjectDetectionModel Class
- * @file face_detection_model.h
+ * @brief A header file with declaration for ObjectDetectionYolov5Model Class
+ * @file object_detection_yolov5_model.h
  */
 #ifndef OPENVINO_WRAPPER_LIB__MODELS__OBJECT_DETECTION_YOLOV5_MODEL_HPP_
 #define OPENVINO_WRAPPER_LIB__MODELS__OBJECT_DETECTION_YOLOV5_MODEL_HPP_
@@ -24,17 +24,9 @@
 namespace Models
 {
 /**
- * @class ObjectDetectionModel
- * @brief This class generates the face detection model.
+ * @class ObjectDetectionYolov5Model
+ * @brief This class generates the YOLO v5 model.
  */
-#pragma pack(1)
-    typedef struct Resize {
-        cv::Mat resized_image;
-        int dw{};
-        int dh{};
-    } Resize_t;
-#pragma pack()
-
 class ObjectDetectionYolov5Model : public ObjectDetectionModel
 {
   using Result = openvino_wrapper_lib::ObjectDetectionResult;

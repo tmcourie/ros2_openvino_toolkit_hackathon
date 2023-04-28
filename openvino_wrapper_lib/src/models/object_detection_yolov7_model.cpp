@@ -57,30 +57,18 @@ bool Models::ObjectDetectionYolov7Model::updateLayerProperty(
   addInputInfo("input", input_tensor_name_);
 
   // set output property
-  //auto output_info_map = model->outputs();
-  std::vector<ov::Output<ov::Node>> output_info_map_list = model->outputs();
-  if (output_info_map_list.size() != 1)
+  auto output_info_map = model->outputs();
+    if (output_info_map.size() != 1)
   {
     slog::warn << "This model seems not Yolo-like! We got "
-               << std::to_string(output_info_map_list.size()) << "outputs, but Yolov7 has only one."
+               << std::to_string(output_info_map.size()) << "outputs, but Yolov7 has only one."
                << slog::endl;
 
-    for(int i=0; i<output_info_map_list.size(); i++)
-    {
-      slog::warn << "Output " << i << " " << output_info_map_list[i].get_any_name() << slog::endl;
-    }
-
-    //return false;
+    return false;
   }
 
-  auto output_info_map = output_info_map_list;
-
-  //output_tensor_name_ = model->output().get_any_name();
   output_tensor_name_ = output_info_map[0].get_any_name();
-  slog::debug << "Calling ov::preprocess::OutputInfo &output_info = ppp.output();" << slog::endl;
-  //ov::preprocess::OutputInfo &output_info = ppp.output(0);
   ov::preprocess::OutputInfo &output_info = ppp.output();
-  slog::debug << "Returned from ov::preprocess::OutputInfo &output_info = ppp.output();" << slog::endl;
   addOutputInfo("output", output_tensor_name_);
   output_info.tensor().set_element_type(ov::element::f32);
   slog::info << "Checking Object Detection output ... Name=" << output_tensor_name_
@@ -144,23 +132,17 @@ bool Models::ObjectDetectionYolov7Model::fetchResults(
     const float &confidence_thresh,
     const bool &enable_roi_constraint)
 {
-  slog::info << "entering Models::ObjectDetectionYolov7Model::fetchResults(" <<  slog::endl;
-
   const float NMS_THRESHOLD = 0.45; //  remove overlapping bounding boxes
 
   ov::InferRequest request = engine->getRequest();
   std::string output = getOutputName();
-  slog::info << "before get output" <<  slog::endl;
   const ov::Tensor &output_tensor = request.get_output_tensor();
-  slog::info << "after get ouput" <<  slog::endl;
   ov::Shape output_shape = output_tensor.get_shape();
   auto *detections = output_tensor.data<float>();
   std::vector<cv::Rect> boxes;
   std::vector<int> class_ids;
   std::vector<float> confidences;
   std::vector<std::string> &labels = getLabels();
-
-  slog::info << "Potential bounding boxes: " << slog::endl;
 
   for (size_t i = 0; i < output_shape.at(1); i++)
   {
@@ -188,8 +170,6 @@ bool Models::ObjectDetectionYolov7Model::fetchResults(
       float h = detection[3];
       auto x_min = x - (w / 2);
       auto y_min = y - (h / 2);
-      
-      slog::info << "bounding box: " << x << ", " << y << ", "<< w << ", "<< h << slog::endl;
       
       boxes.emplace_back(x_min, y_min, w, h);
     }
