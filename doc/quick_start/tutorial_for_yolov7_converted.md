@@ -31,7 +31,7 @@ python3 -m venv yolo_env            // Create a virtual python environment
 source yolo_env/bin/activate        // Activate environment
 pip install -r requirements.txt     // Install yolov7 prerequisites
 pip install onnx                    // Install ONNX
-pip install nvidia-pyindex	     // Add NVIDIA PIP index
+pip install nvidia-pyindex          // Add NVIDIA PIP index
 pip install onnx-graphsurgeon       // Install GraphSurgeon
 ```
 
